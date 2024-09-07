@@ -1,1 +1,46 @@
+-- Authors Table
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(100) NOT NULL,
+    BirthYear INT
+);
 
+-- Books Table
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(255) NOT NULL,
+    AuthorID INT,
+    PublishedYear INT,
+    Genre VARCHAR(50),
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+-- Users Table
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    UserName VARCHAR(100) NOT NULL,
+    JoinDate DATE
+);
+
+-- Loans Table
+CREATE TABLE Loans (
+    LoanID INT PRIMARY KEY AUTO_INCREMENT,
+    BookID INT,
+    UserID INT,
+    LoanDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Insert Data
+INSERT INTO Authors (Name, BirthYear) VALUES ('George Orwell', 1903);
+INSERT INTO Books (Title, AuthorID, PublishedYear, Genre) VALUES ('1984', 1, 1949, 'Dystopian');
+INSERT INTO Users (UserName, JoinDate) VALUES ('Alice Smith', '2023-01-15');
+INSERT INTO Loans (BookID, UserID, LoanDate) VALUES (1, 1, '2024-03-01');
+
+-- List of Books and Loaned Books
+SELECT Books.Title, Authors.Name AS Author, Loans.UserID, Loans.LoanDate
+FROM Books
+JOIN Authors ON Books.AuthorID = Authors.AuthorID
+LEFT JOIN Loans ON Books.BookID = Loans.BookID;
